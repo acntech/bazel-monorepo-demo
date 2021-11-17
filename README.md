@@ -21,3 +21,30 @@ Bazel is an open-source build and test tool similar to Maven. It uses a human-re
 * __Bazel scales.__ Bazel maintains agility while handling builds with 100k+ source files. It works with multiple repositories and user bases in the tens of thousands.
 
 * __Bazel is extensible.__ Many languages are supported, and you can extend Bazel to support any other language or framework.
+
+
+# Build project commands
+
+## Build
+`bazel build //java:ProjectRunner`
+
+`bazel build //java/src/main/java/com/example/cmdline:runner`
+
+To build a deployable version of the runner containing the dependencies class (Greeting.java), run:
+
+`bazel build //java/src/main/java/com/example/cmdline:runner_deploy.jar`
+
+This creates runner_deploy.jar, which you can run standalone away from your development environment since it contains the required runtime dependencies.
+
+## Run
+`bazel-bin/java/ProjectRunner`
+
+`bazel-bin/java/src/main/java/com/example/cmdline/runner`
+
+## Dependency graph
+
+The dependency graph of the ProjectRunner java class can be first generated with
+
+`bazel query  --notool_deps --noimplicit_deps "deps(//java:ProjectRunner)" --output graph`
+
+Then visualized by copying the string output to http://www.webgraphviz.com/
