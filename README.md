@@ -46,8 +46,33 @@ Bazel is an open-source build and test tool similar to Maven. It uses a human-re
 
 # Build project commands
 
-## Build
+As a side notes, all Bazel commands are run from the WORKSPACE folder, which is considered the root. In this project we have implemented several sup-project with different languages.
+
+## Java
+### Build & Run
+To build the ProjectRunner run
+
 `bazel build //java:ProjectRunner`
+
+With Bazel you can split the project up into multiple targets and packages allows Bazel for fast incremental builds. In other words, only rebuild what is changed and making it possible to build multiple parts of the project at once. With this configuration Bazel first builds the greeter library, then the ProjectRunner binary. The deps attribute in java_binary tells Bazel that the greeter library is required to build the ProjectRunner binary. If you now modify ProjectRunner.java and rebuild the project, Bazel only recompiles that file. 
+
+To run the ProjectRunner run
+
+`bazel-bin/java/ProjectRunner`
+### Dependency graph
+
+The dependency graph of the ProjectRunner java class can be first generated with
+
+`bazel query  --notool_deps --noimplicit_deps "deps(//java:ProjectRunner)" --output graph`
+
+Then visualized by copying the string output to http://www.webgraphviz.com/. we see the dependency graph and why projectRunner only is rebuilt if modified.
+You’ve now built the project with two targets. The ProjectRunner target builds two source files and depends on one other target (:greeter), which builds one additional source file.
+
+## Multiple BUILD packages
+
+Let’s now split the project into multiple packages. If you take a look at the src/main/java/com/example/cmdline directory, you can see that it also contains a BUILD file, plus some source files. Therefore, to Bazel, the workspace now contains two packages, //src/main/java/com/example/cmdline and //, since there is a BUILD file at the root of the workspace.
+
+However, for the build to succeed, you must explicitly give the runner target in //src/main/java/com/example/cmdline/BUILD visibility to targets in //BUILD using the visibility attribute. This is because by default targets are only visible to other targets in the same BUILD file. Bazel uses target visibility to prevent issues such as libraries containing implementation details leaking into public APIs. To build the sub package run
 
 `bazel build //java/src/main/java/com/example/cmdline:runner`
 
@@ -55,17 +80,33 @@ To build a deployable version of the runner containing the dependencies class (G
 
 `bazel build //java/src/main/java/com/example/cmdline:runner_deploy.jar`
 
-This creates runner_deploy.jar, which you can run standalone away from your development environment since it contains the required runtime dependencies.
-
-## Run
-`bazel-bin/java/ProjectRunner`
+This creates runner_deploy.jar, which you can run standalone away from your development environment since it contains the required runtime dependencies. Run the file with
 
 `bazel-bin/java/src/main/java/com/example/cmdline/runner`
 
-## Dependency graph
 
-The dependency graph of the ProjectRunner java class can be first generated with
+## Python
 
-`bazel query  --notool_deps --noimplicit_deps "deps(//java:ProjectRunner)" --output graph`
+We have created two Python repositories / sub-folder to demonstrate cross dependency across projects. We have one main package and one library package.
 
-Then visualized by copying the string output to http://www.webgraphviz.com/
+### Build
+
+To build the main python project run
+
+`bazel build python_main:greetings`
+
+To build the python common library project run
+
+`bazel build python_util:greeting_class`
+
+### RUN
+
+`bazel run python_mail:greetings`
+
+You cannot run the python common library since this is defined as a library package in the Bazel BUILD file, and is supposed to be run by other Python packages.
+
+### Test
+
+you can run the test implemented for the Python common library by running
+
+`bazel test python_util:test_greeting_class`

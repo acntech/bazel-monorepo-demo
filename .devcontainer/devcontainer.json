@@ -1,0 +1,37 @@
+{
+	"name": "Python 3",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "..",
+		"args": {
+			// Update 'VARIANT' to pick a Python version: 3, 3.9, 3.8, 3.7, 3.6.
+			// Append -bullseye or -buster to pin to an OS version.
+			// Use the -bullseye variants if you are on a M1 mac.
+			"VARIANT": "3.9-bullseye",
+		}
+	},
+	// Set *default* container specific settings.json values on container create.
+	"settings": {
+		"python.defaultInterpreterPath": "/usr/local/bin/python"
+	},
+	// Add the IDs of extensions you want installed when the container is created.
+	"extensions": [
+		"ms-python.python",
+		"njpwerner.autodocstring",
+		"mhutchie.git-graph",
+		"gruntfuggly.todo-tree"
+	],
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	"forwardPorts": [
+		8888
+	],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "sh .devcontainer/postCreateCommand.sh",
+	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+	"remoteUser": "vscode",
+	"mounts": [
+		// For multipe containers, source should have a unique value to prohibit bugs across OS/env
+		// setups. Else volume will be shared across containers.
+		"source=unique-vol-name-here,target=/home/vscode/.vscode-server/extensions,type=volume",
+	]
+}
