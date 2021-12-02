@@ -1,8 +1,8 @@
-    """Test class for Greetings class
+"""Test class for Greetings class
 
-    Raises:
-        SystemExit: fix for pytest and Bazel integration (from stack)
-    """
+Raises:
+    SystemExit: fix for pytest and Bazel integration (from stack)
+"""
 from python_util.src.greeting_class import Greeting
 
 class TestGreeting:

@@ -31,6 +31,17 @@ Bazel is an open-source build and test tool similar to Maven. It uses a human-re
 
 [See Bazel documentation](https://docs.bazel.build/versions/main/bazel-overview.html)
 
+## Bazel concept and terminology
+Before you can build a project, you need to set up its workspace. A workspace is a directory that holds your project’s source files and Bazel’s build outputs. It also contains files that Bazel recognizes as special:
+
+* The WORKSPACE file, which identifies the directory and its contents as a Bazel workspace and lives at the root of the project’s directory structure,
+* One or more BUILD files, which tell Bazel how to build different parts of the project. (A directory within the workspace that contains a BUILD file is a package. You will learn about packages later in this tutorial.)
+To designate a directory as a Bazel workspace, create an empty file named WORKSPACE in that directory.
+
+
+### Target
+A BUILD file contains several different types of instructions for Bazel. The most important type is the build rule, which tells Bazel how to build the desired outputs, such as executable binaries or libraries. Each instance of a build rule in the BUILD file is called a target and points to a specific set of source files and dependencies. A target can also point to other targets.
+
 ## Bazel benefits
 
 * __High-level build language.__ Bazel uses an abstract, human-readable language to describe the build properties of your project at a high semantical level. Unlike other tools, Bazel operates on the concepts of libraries, binaries, scripts, and data sets, shielding you from the complexity of writing individual calls to tools such as compilers and linkers.
@@ -68,7 +79,7 @@ The dependency graph of the ProjectRunner java class can be first generated with
 Then visualized by copying the string output to http://www.webgraphviz.com/. we see the dependency graph and why projectRunner only is rebuilt if modified.
 You’ve now built the project with two targets. The ProjectRunner target builds two source files and depends on one other target (:greeter), which builds one additional source file.
 
-## Multiple BUILD packages
+### Multiple BUILD packages
 
 Let’s now split the project into multiple packages. If you take a look at the src/main/java/com/example/cmdline directory, you can see that it also contains a BUILD file, plus some source files. Therefore, to Bazel, the workspace now contains two packages, //src/main/java/com/example/cmdline and //, since there is a BUILD file at the root of the workspace.
 

@@ -1,5 +1,5 @@
-    """Python main fail calling common python library
-    """
+"""Python main fail calling common python library
+"""
 from python_util.src.greeting_class import Greeting
 
 

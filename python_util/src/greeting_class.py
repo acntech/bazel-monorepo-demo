@@ -1,8 +1,8 @@
-    """Greetings class generating greet string from input
+"""Greetings class generating greet string from input
 
-    Returns:
-        string: greet string
-    """
+Returns:
+    string: greet string
+"""
 
 class Greeting:
 
